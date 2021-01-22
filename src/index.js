@@ -102,10 +102,10 @@ const ShowListing = ({ names, listing, nameStr, handleNameChange }) => {
 const UiButtons = ({ setListing }) => {
   return (
     <div>
-      <Button handleClick={() => setListing(0)} text = "Show all the names and amounts ordered by the amount" />
-      <Button handleClick={() => setListing(1)} text = "Show all the names in alphabetical order" />
-      <Button handleClick={() => setListing(2)} text = "Show the total number of all names together" />
-      <Button handleClick={() => setListing(3)} text = "Show the amount of the name specified below" />
+      <Button handleClick={() => setListing(0)} text = "Order by the amount" />
+      <Button handleClick={() => setListing(1)} text = "Alphabetical order" />
+      <Button handleClick={() => setListing(2)} text = "Total number of names" />
+      <Button handleClick={() => setListing(3)} text = "Amount of a name" />
     </div>
   )
 }
