@@ -2,13 +2,25 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 
+const ListDefault = ( {names} ) => {
+  /* In the beginning list in the order in JSON file */
+  return (
+    <table>
+      <tbody>
+        {names
+        .map(n => <tr key={n.name}><td>{n.name}</td><td>{n.amount}</td></tr>)
+        }
+      </tbody>
+    </table>
+  )
+}
 
 const ListByAmount = ({ names }) => {
   return (
     <table>
       <tbody>
         {names
-        .sort((a, b) => (b.amount > a.amount) ? 1 : -1)
+        .sort((a, b) => b.amount - a.amount)
         .map(n => <tr key={n.name}><td>{n.name}</td><td>{n.amount}</td></tr>)
         }
       </tbody>
@@ -47,7 +59,7 @@ const AmountOfName = ({ names, aName }) => {
     )
   } else {
     return (
-      <p> Amount of names {aName} is 0 </p>
+      <p> Name {aName} not found! </p>
     )
   }
 }
@@ -58,10 +70,10 @@ const Button = (props) => (
   </button>
 )
 
-const NameForm = ({nameStr, handleNameChange}) => {
+const NameForm = ({ nameStr, handleNameChange}) => {
   return (
     <form>
-      Specify a name
+      Specify a name (case sensitive)
       <input
         value={nameStr}
         onChange={handleNameChange}
@@ -84,23 +96,23 @@ const ShowListing = ({ names, listing, nameStr, handleNameChange }) => {
         <AmountOfName names={names} aName={nameStr} />
       </div>
     )
-  } 
+  } else return <ListDefault names={names} />
 }
 
 const UiButtons = ({ setListing }) => {
   return (
     <div>
-      <Button handleClick={() => setListing(0)} text = "Show all names and amounts ordered by amount" />
-      <Button handleClick={() => setListing(1)} text = "Show all names in alphabetical order" />
-      <Button handleClick={() => setListing(2)} text = "Show sum of all names" />
-      <Button handleClick={() => setListing(3)} text = "Show amount of name specified in the text box below" />
+      <Button handleClick={() => setListing(0)} text = "Show all the names and amounts ordered by the amount" />
+      <Button handleClick={() => setListing(1)} text = "Show all the names in alphabetical order" />
+      <Button handleClick={() => setListing(2)} text = "Show the total number of all names together" />
+      <Button handleClick={() => setListing(3)} text = "Show the amount of the name specified below" />
     </div>
   )
 }
 
 const App = ({ names }) => {
-  const [listing, setListing] = useState(0)
-  const [nameStr, setNameStr] = useState('')
+  const [listing, setListing] = useState()  // empty for the default listing in the beginning
+  const [nameStr, setNameStr] = useState('Ville')  // "Ville" as an example
   
   const handleNameChange = (event) => {
     setNameStr(event.target.value)
