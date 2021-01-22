@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 
@@ -8,12 +8,12 @@ const ListByAmount = (props) => {
   
   return (
   <div>
-    <table>
+    <ul>
       {names
       .sort((a, b) => (b.amount > a.amount) ? 1 : -1)
-      .map(n => <tr key={n.name}>{n.name} {n.amount} </tr>)  
+      .map(n => <li key={n.name}>{n.name} {n.amount} </li>) 
       }
-    </table>
+    </ul>
   </div>
   )
 }
@@ -23,12 +23,12 @@ const ListByName = (props) => {
   
   return (
   <div>
-    <table>
+    <ul>
       {names
       .sort((a, b) => (a.name > b.name) ? 1 : -1)
-      .map(n => <tr key={n.name}>{n.name} </tr>)  
+      .map(n => <li key={n.name}>{n.name} </li>)  
       }
-    </table>
+    </ul>
   </div>
   )
 }
@@ -52,28 +52,50 @@ const AmountOfName = (props) => {
   const names = props.names
   const aName = props.aName
 
-  return (
-    <div>
-      <p> Amount of names {aName} is {names.find(n => n.name === aName).amount} </p>
+  if ((names.map(n => n.name)).includes(aName)) {
+    return (
+      <div>
+        <p> Amount of names {aName} is {names.find(n => n.name === aName).amount} </p>
     </div>
-  )
+    )
+  } else {
+    return (
+      <div>
+        <p> Amount of names {aName} is 0 </p>
+      </div>
+    )
+  }
+}
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
+
+const ShowListing = (props) => {
+  const {names, listing, aName} = props
+  if (listing === 0) {
+    return <ListByAmount names={names} />
+  } else if (listing === 1) {
+    return <ListByName names={names} />
+  } else if (listing === 2) {
+    return <TotalNumberOfNames names={names} />
+  } else if (listing === 3) {
+    return <AmountOfName names={names} aName={aName} />
+  } 
+
 }
 
 
 const App = (props) => {
   const names = props.names
+  const [listing, setListing] = useState(0)
   
   return (
     <div>
-      <h2>Names listed by amounts</h2>
-      <ListByAmount names={names} />
-      <h2>Names listed in aplphabetical order</h2>
-      <ListByName names={names} />
-      <h2>Number of names in total</h2>
-      <TotalNumberOfNames names={names} />
-      <h2>Amount of a givem name</h2>
-      <AmountOfName names={names} aName="Mikko" />
-
+      <Button handleClick={() => setListing((listing + 1) % 4)} text = "Next listing" />
+      <ShowListing names={names} listing={listing} aName="Mikko" />
     </div>
   )
 }
